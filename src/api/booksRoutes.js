@@ -1,4 +1,6 @@
+/* eslint-disable no-undef */
 const express = require('express');
+const { ObjectId } = require('mongodb');
 const { dbClient } = require('../config');
 
 const booksRoutes = express.Router();
@@ -80,5 +82,25 @@ booksRoutes.get('/book-author', async (req, res) => {
 });
 
 // GET /api/book/:bookId - grazina knyga su id lygiu bookId
-
+booksRoutes.get('/book/:bookId', async (req, res) => {
+  try {
+    // prisijungti
+    await dbClient.connect();
+    // atlikti veiksma
+    console.log('connected');
+    // gauti visas knygas
+    const collection = dbClient.db('library').collection('books');
+    const { bookId } = req.params;
+    console.log('bookId ===', bookId);
+    const bookById = await collection.find({ _id: ObjectId(bookId) }).toArray();
+    console.log('bookById ===', bookById);
+    res.status(200).json(bookById);
+  } catch (error) {
+    console.error('error in getting one book', error);
+    res.status(500).json('something is wrong');
+  } finally {
+    // uzdaryti prisijungima
+    await dbClient.close();
+  }
+});
 module.exports = booksRoutes;
