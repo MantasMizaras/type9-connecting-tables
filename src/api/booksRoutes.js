@@ -71,7 +71,20 @@ booksRoutes.get('/book-author', async (req, res) => {
       ])
       .toArray();
     console.log('allBooksArr ===', allBooksArr);
-    res.status(200).json(allBooksArr);
+    const authorsWithBooksArr = allBooksArr.map((bookObj) => {
+      if (!bookObj.authorArr[0].length === 0) {
+        return bookObj;
+      }
+      return {
+        title: bookObj.title,
+        year: bookObj.year,
+        rating: bookObj.rating,
+        authorName: bookObj.authorArr[0].name, // arba klaustukas kaip zemiau , arba su if kaip si eilute
+        authorTown: bookObj.authorArr[0]?.town,
+      };
+    });
+    console.log('authorsWithBooksArr ===', authorsWithBooksArr);
+    res.status(200).json(authorsWithBooksArr);
   } catch (error) {
     console.error('error in getting all books', error);
     res.status(500).json('something is wrong');
