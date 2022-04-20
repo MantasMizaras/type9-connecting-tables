@@ -49,6 +49,57 @@ booksRoutes.get('/book', async (req, res) => {
   }
 });
 
+booksRoutes.get('/book-agg2', async (req, res) => {
+  try {
+    const aggPipeline = [
+      {
+        $lookup: {
+          from: 'authors',
+          localField: '_id',
+          foreignField: 'bookId',
+          as: 'bookAuthorArr',
+        },
+      },
+      {
+        $sort: {
+          rating: -1,
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [
+              {
+                $arrayElemAt: ['$bookAuthorArr', 0],
+              },
+              '$$ROOT',
+            ],
+          },
+        },
+      },
+      {
+        $project: {
+          bookAuthorArr: 0,
+        },
+      },
+    ];
+    // prisijungti
+    await dbClient.connect();
+    // atlikti veiksma
+    console.log('connected');
+    // gauti visas knygas
+    const collection = dbClient.db('library').collection('books');
+    const allBooksArr = await collection.aggregate(aggPipeline).toArray();
+    res.status(200).json(allBooksArr);
+  } catch (error) {
+    console.error('error in getting all books', error);
+    res.status(500).json('something is wrong');
+  } finally {
+    // uzdaryti prisijungima
+    await dbClient.close();
+  }
+});
+
 // GET /api/book-authors/ - grazina visas knygas
 booksRoutes.get('/book-author', async (req, res) => {
   try {
@@ -72,13 +123,14 @@ booksRoutes.get('/book-author', async (req, res) => {
       .toArray();
     console.log('allBooksArr ===', allBooksArr);
     const authorsWithBooksArr = allBooksArr.map((bookObj) => {
-      if (!bookObj.authorArr[0].length === 0) {
+      if (!bookObj.authorArr.length === 0) {
         return bookObj;
       }
       return {
         title: bookObj.title,
         year: bookObj.year,
         rating: bookObj.rating,
+        // eslint-disable-next-line max-len
         authorName: bookObj.authorArr[0].name, // arba klaustukas kaip zemiau , arba su if kaip si eilute
         authorTown: bookObj.authorArr[0]?.town,
       };

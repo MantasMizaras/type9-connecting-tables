@@ -1,17 +1,17 @@
 /**
  * from: The target collection. SU KOKIA LENTELE JUNGIAM
  * localField: The local join field. VIETINIS LAUKAS KURIS YRA VIENODAS SU KITOS LENTELES LAUKU
- * foreignField: The target join field. KITOS LENTELES LAUKAS LYGUS localField 
+ * foreignField: The target join field. KITOS LENTELES LAUKAS LYGUS localField
  * as: The name for the results.
  * pipeline: The pipeline to run on the joined collection.
  * let: Optional variables to use in the pipeline field stages.
  */
- {
-    from: 'authors',
-    localField: '_id',
-    foreignField: 'bookId',
-    as: 'author'
-  }
+//  {
+//     from: 'authors',
+//     localField: '_id',
+//     foreignField: 'bookId',
+//     as: 'author'
+//   }
 
 //   const MongoClient = require('mongodb').MongoClient;
 // const assert = require('assert');
@@ -24,9 +24,9 @@
 // const agg = [
 //   {
 //     '$lookup': {
-//       'from': 'authors', 
-//       'localField': '_id', 
-//       'foreignField': 'bookId', 
+//       'from': 'authors',
+//       'localField': '_id',
+//       'foreignField': 'bookId',
 //       'as': 'author'
 //     }
 //   }

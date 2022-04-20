@@ -3,6 +3,9 @@ GET http://localhost:3000/api/users
 
 GET http://localhost:3000/api/book
 ### 
+
+GET http://localhost:3000/api/book-agg2
+### 
 GET http://localhost:3000/api/book/625e64cdb0d281db9cb103f1
 ### 
 
