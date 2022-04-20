@@ -14,8 +14,8 @@ app.use(express.json());
 app.get('/', (req, res) => res.json('OK'));
 
 // Routes
-app.use('/api', userRoutes);
-app.use('/api', booksRoutes);
-app.use('/api', authorRoutes);
+app.use('/api/', userRoutes);
+app.use('/api/', booksRoutes);
+app.use('/api/', authorRoutes);
 
 app.listen(PORT, () => console.log('server online, PORT', PORT));

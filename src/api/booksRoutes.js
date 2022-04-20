@@ -147,7 +147,32 @@ booksRoutes.get('/book-author', async (req, res) => {
 });
 
 // GET /api/book/:bookId - grazina knyga su id lygiu bookId
-booksRoutes.get('/book/:bookId', async (req, res) => {
+// booksRoutes.get('/book/:bookId', async (req, res) => {
+//   console.log('single book routes');
+//   try {
+//     // prisijungti
+//     await dbClient.connect();
+//     // atlikti veiksma
+//     console.log('connected');
+//     // gauti visas knygas
+//     const collection = dbClient.db('library').collection('books');
+//     const { bookId } = req.params;
+//     console.log('bookId ===', bookId);
+//     const bookById = await collection.findOne(ObjectId(bookId));
+//     console.log('bookById ===', bookById);
+//     res.status(200).json(bookById);
+//   } catch (error) {
+//     console.error('error in getting one book', error);
+//     res.status(500).json('something is wrong');
+//   } finally {
+//     // uzdaryti prisijungima
+//     await dbClient.close();
+//   }
+// });
+
+// DELETE /api/book/:delBookId - istrinam knyga kurios id === delBookId
+booksRoutes.delete('/book/del/:delBookId', async (req, res) => {
+  console.log('deleting');
   try {
     // prisijungti
     await dbClient.connect();
@@ -155,11 +180,11 @@ booksRoutes.get('/book/:bookId', async (req, res) => {
     console.log('connected');
     // gauti visas knygas
     const collection = dbClient.db('library').collection('books');
-    const { bookId } = req.params;
-    console.log('bookId ===', bookId);
-    const bookById = await collection.find({ _id: ObjectId(bookId) }).toArray();
-    console.log('bookById ===', bookById);
-    res.status(200).json(bookById);
+    const { delBookId } = req.params;
+    console.log('delBookId ===', delBookId);
+    const deleteResult = await collection.deleteOne({ _id: ObjectId(delBookId) });
+    console.log('deleteResult ===', deleteResult);
+    res.status(200).json(deleteResult);
   } catch (error) {
     console.error('error in getting one book', error);
     res.status(500).json('something is wrong');
@@ -168,4 +193,5 @@ booksRoutes.get('/book/:bookId', async (req, res) => {
     await dbClient.close();
   }
 });
+
 module.exports = booksRoutes;
